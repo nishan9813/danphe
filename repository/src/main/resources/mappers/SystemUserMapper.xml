@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.repository.mapper.SystemUserMapper">
+
+
+    <!--
+    Expected table DDL:
+    CREATE TABLE admin.system_users (
+        id               VARCHAR(36)  PRIMARY KEY,
+        password         VARCHAR(255) NOT NULL,
+        first_name        VARCHAR(255),
+        last_name         VARCHAR(255),
+        email            VARCHAR(255) NOT NULL UNIQUE,
+        role_id          VARCHAR(36)  REFERENCES admin.roles(id),
+        created_on       TIMESTAMP,
+        created_by       VARCHAR(100),
+        last_modified_on TIMESTAMP,
+        last_modified_by VARCHAR(100),
+        deleted_on       TIMESTAMP,
+        deleted_by       VARCHAR(100),
+        active           BOOLEAN      NOT NULL DEFAULT TRUE,
+        deleted          BOOLEAN      NOT NULL DEFAULT FALSE,
+        remark           TEXT,
+        version          BIGINT       DEFAULT 0
+    );
+-->
+
+
+    <resultMap id="systemUserResultMap"
+               type="com.example.common.entity.SystemUserEntity">
+        <id     property="id"             column="id"/>
+        <result property="password"       column="password"/>
+        <result property="firstName"      column="first_name"/>
+        <result property="lastName"       column="last_name"/>
+        <result property="email"          column="email"/>
+        <result property="roleId"         column="role_id"/>
+        <result property="createdOn"      column="created_on"        javaType="java.time.LocalDateTime"/>
+        <result property="createdBy"      column="created_by"/>
+        <result property="lastModifiedOn" column="last_modified_on"  javaType="java.time.LocalDateTime"/>
+        <result property="lastModifiedBy" column="last_modified_by"/>
+        <result property="deletedOn"      column="deleted_on"        javaType="java.time.LocalDateTime"/>
+        <result property="deletedBy"      column="deleted_by"/>
+        <result property="active"         column="active"/>
+        <result property="deleted"        column="deleted"/>
+        <result property="remark"         column="remark"/>
+        <result property="version"        column="version"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id, password, first_name, last_name, email, role_id,
+        created_on, created_by, last_modified_on, last_modified_by,
+        deleted_on, deleted_by, active, deleted, remark, version
+    </sql>
+
+    <sql id="filterWhere">
+        <where>
+            <if test="filter.id != null">
+                AND id = #{filter.id}
+            </if>
+            <if test="filter.ids != null and !filter.ids.isEmpty()">
+                AND id IN
+                <foreach item="id" collection="filter.ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="filter.email != null">
+                AND LOWER(email) = LOWER(#{filter.email})
+            </if>
+            <if test="filter.active != null">
+                AND active = #{filter.active}
+            </if>
+            <if test="filter.searchParameter != null and filter.searchParameter != ''">
+                AND (
+                email ILIKE #{filter.searchParameter}
+                OR first_name ILIKE #{filter.searchParameter}
+                OR last_name  ILIKE #{filter.searchParameter}
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="findAll" resultMap="systemUserResultMap">
+        SELECT <include refid="baseColumns"/>
+        FROM admin.system_users
+        <include refid="filterWhere"/>
+        ORDER BY ${filter.sortColumn} ${filter.sortDirection}
+        LIMIT #{filter.pageSize} OFFSET #{filter.offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM admin.system_users
+        <include refid="filterWhere"/>
+    </select>
+
+    <select id="findById" resultMap="systemUserResultMap">
+        SELECT <include refid="baseColumns"/>
+        FROM admin.system_users
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByEmail" resultMap="systemUserResultMap">
+        SELECT <include refid="baseColumns"/>
+        FROM admin.system_users
+        WHERE LOWER(email) = LOWER(#{email})
+    </select>
+
+    <insert id="insert">
+        INSERT INTO admin.system_users (
+            id, password, first_name, last_name, email, role_id,
+            created_on, created_by, active, deleted, remark, version
+        ) VALUES (
+                     #{id}, #{password}, #{firstName}, #{lastName}, #{email}, #{roleId},
+                     #{createdOn}, #{createdBy}, #{active}, #{deleted}, #{remark}, #{version}
+                 )
+    </insert>
+
+    <update id="update">
+        UPDATE admin.system_users
+        SET password         = #{password},
+            first_name       = #{firstName},
+            last_name        = #{lastName},
+            email            = #{email},
+            role_id          = #{roleId},
+            last_modified_on = #{lastModifiedOn},
+            last_modified_by = #{lastModifiedBy},
+            active           = #{active},
+            deleted          = #{deleted},
+            remark           = #{remark},
+            version          = #{version}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE admin.system_users
+        SET
+            deleted    = #{domain.deleted},
+            active     = #{domain.active},
+            deleted_on = #{domain.deletedOn},
+            deleted_by = #{domain.deletedBy}
+        WHERE id = #{domain.id}
+    </update>
+
+</mapper>
