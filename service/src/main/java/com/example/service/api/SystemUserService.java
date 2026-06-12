@@ -1,7 +1,12 @@
 package com.example.service.api;
 
 import com.example.common.domain.SystemUserDomain;
+import com.example.common.filter.SystemUserFilter;
 
-public interface SystemUserService {
+import java.util.Optional;
+
+public interface SystemUserService extends Service<SystemUserDomain, SystemUserFilter> {
     SystemUserDomain create(SystemUserDomain domain);
+
+    Optional<SystemUserDomain> findByEmail(String email);
 }
