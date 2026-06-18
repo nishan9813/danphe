@@ -1,6 +1,7 @@
 package com.example.system.security;
 
 import com.example.common.domain.SystemUserDomain;
+import lombok.Data;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Data
 public class SystemUserPrincipal implements UserDetails {
 
     private final SystemUserDomain user;

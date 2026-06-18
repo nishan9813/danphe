@@ -6,13 +6,12 @@ import lombok.Data;
 
 @Data
 public class SystemUserDomain extends AbstractDomain {
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
+    private String roleId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    private String roleId;
 
     @JsonIgnore
     private RoleDomain roleDomain;

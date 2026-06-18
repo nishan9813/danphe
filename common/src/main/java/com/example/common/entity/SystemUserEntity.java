@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class SystemUserEntity extends AbstractEntity {
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
     private String password;
+    private String roleId;
 }

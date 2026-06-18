@@ -1,6 +1,9 @@
 package com.example.repository.internal;
 
+import com.example.common.base.Converter;
 import com.example.common.base.common.Page;
+import com.example.common.converter.SystemUserConverter;
+import com.example.common.domain.SystemUserDomain;
 import com.example.common.entity.SystemUserEntity;
 import com.example.common.filter.SystemUserFilter;
 import com.example.repository.api.SystemUserDao;
@@ -14,9 +17,11 @@ import java.util.Optional;
 public class SystemUserDaoImpl implements SystemUserDao {
 
     private final SystemUserMapper mapper;
+    private final SystemUserConverter converter;
 
-    public SystemUserDaoImpl(SystemUserMapper mapper) {
+    public SystemUserDaoImpl(SystemUserMapper mapper, SystemUserConverter converter) {
         this.mapper = mapper;
+        this.converter = converter;
     }
 
 
@@ -52,6 +57,12 @@ public class SystemUserDaoImpl implements SystemUserDao {
 
     @Override
     public Optional<SystemUserEntity> findById(String id) {
-        return Optional.empty();
+        return Optional.ofNullable(mapper.findById(id));
+    }
+
+    @Override
+    public Optional<SystemUserDomain> findByEmail(String email) {
+        Optional<SystemUserDomain> domain = Optional.ofNullable(converter.toDomain(mapper.findByEmail(email)));
+        return domain;
     }
 }

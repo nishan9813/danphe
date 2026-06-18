@@ -4,8 +4,7 @@ import com.example.common.domain.SystemUserDomain;
 
 public record SystemUserResponse(
         String id,
-        String firstName,
-        String lastName,
+        String fullName,
         String email,
         String roleId
 ) {
@@ -13,8 +12,7 @@ public record SystemUserResponse(
         if (domain == null) return null;
         return new SystemUserResponse(
                 domain.getId(),
-                domain.getFirstName(),
-                domain.getLastName(),
+                domain.getFullName(),
                 domain.getEmail(),
                 domain.getRoleId());
     }

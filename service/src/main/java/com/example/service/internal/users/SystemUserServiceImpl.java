@@ -42,6 +42,11 @@ public class SystemUserServiceImpl implements SystemUserService {
     }
 
     @Override
+    public Optional<SystemUserDomain> findByEmail(String email) {
+        return repo.findByEmail(email);
+    }
+
+    @Override
     public SystemUserDomain insert(SystemUserDomain req) {
         return null;
     }
@@ -58,7 +63,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public Optional<SystemUserDomain> findById(String id) {
-        return Optional.empty();
+        return repo.findById(id).map(converter::toDomain);
     }
 
     @Override

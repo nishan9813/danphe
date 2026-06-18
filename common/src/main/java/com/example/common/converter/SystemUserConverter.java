@@ -10,10 +10,11 @@ public class SystemUserConverter extends AbstractConverter<SystemUserDomain, Sys
     public SystemUserEntity toEntity(SystemUserDomain domain) {
         if (domain == null) return null;
         SystemUserEntity entity = new SystemUserEntity();
+        entity.setId(domain.getId());
         entity.setEmail(domain.getEmail());
         entity.setPassword(domain.getPassword());
-        entity.setFirstName(domain.getFirstName());
-        entity.setLastName(domain.getLastName());
+        entity.setFullName(domain.getFullName());
+        entity.setRoleId(domain.getRoleId());
         return entity;
     }
 
@@ -21,10 +22,11 @@ public class SystemUserConverter extends AbstractConverter<SystemUserDomain, Sys
     public SystemUserDomain toDomain(SystemUserEntity entity) {
         if (entity == null) return null;
         SystemUserDomain domain = new SystemUserDomain();
+        domain.setId(entity.getId());
         domain.setEmail(entity.getEmail());
         domain.setPassword(entity.getPassword());
-        domain.setFirstName(entity.getFirstName());
-        domain.setLastName(entity.getLastName());
-        return null;
+        domain.setFullName(entity.getFullName());
+        domain.setRoleId(entity.getRoleId());
+        return domain;
     }
 }
