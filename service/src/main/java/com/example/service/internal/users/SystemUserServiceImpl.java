@@ -78,6 +78,6 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public Page<SystemUserDomain> findAll(SystemUserFilter filter) {
-        return null;
+        return repo.findAllWithPagination(filter).map(converter::toDomain);
     }
 }

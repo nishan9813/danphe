@@ -1,10 +1,14 @@
-package com.example.system.controller.user;
+package com.example.system.controller.SystemUser;
 
+import com.example.common.base.common.Page;
 import com.example.common.domain.SystemUserDomain;
+import com.example.common.filter.SystemUserFilter;
 import com.example.common.response.SystemUserResponse;
 import com.example.service.api.SystemUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +27,17 @@ public class SystemUserController {
     }
 
 
+    @PreAuthorize("hasAuthority('SYSTEM_USER_CREATE')")
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     SystemUserResponse create(@RequestBody SystemUserDomain domain) {
         return SystemUserResponse.from(service.create(domain));
+    }
+
+
+    @PreAuthorize("hasAuthority('SYSTEM_USER_READ')")
+    @PostMapping("/all")
+    Page<SystemUserResponse> findAll(@RequestBody SystemUserFilter filter) {
+        return service.findAll(filter).map(SystemUserResponse::from);
     }
 }

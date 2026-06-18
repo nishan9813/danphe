@@ -1,11 +1,21 @@
 package com.example.common.filter;
 
-import lombok.Data;
+import com.example.common.filter.sorting.SystemUserSortField;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class SystemUserFilter extends AbstractFilter{
-    private String firstName;
-    private String lastName;
+@Getter
+@Setter
+public class SystemUserFilter extends AbstractFilter {
+
     private String email;
-    private String password;
+
+    @Override
+    public String getSortColumn() {
+        return SystemUserSortField.getColumn(sortField);
+    }
+
+    public static SystemUserFilter empty() {
+        return new SystemUserFilter();
+    }
 }
