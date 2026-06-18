@@ -8,14 +8,20 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+@Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class MdcSetupFilter extends OncePerRequestFilter {
 
     public static final String SESSION_COOKIE_NAME = "SESSION_TRACE";

@@ -42,7 +42,9 @@ public class SystemUserDaoImpl implements SystemUserDao {
 
     @Override
     public Page<SystemUserEntity> findAllWithPagination(SystemUserFilter filter) {
-        return null;
+        List<SystemUserEntity> data = mapper.findAll(filter);
+        int total = mapper.countAll(filter);
+        return new Page<>(total, filter.getPageSize(), filter.getPageNumber(), data);
     }
 
     @Override

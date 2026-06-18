@@ -13,11 +13,11 @@ public abstract class AbstractFilter implements Filter {
     protected int pageSize = 10;
     protected int pageNumber = 1;
     protected Boolean delete = false;
+
     protected String sortField;
     protected String sortOrder;
     protected Boolean active = true;
     protected String searchParameter;
-
 
     public String getSortColumn() {
         return "created_on";
