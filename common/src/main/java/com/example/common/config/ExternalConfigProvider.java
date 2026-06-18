@@ -29,7 +29,8 @@ public class ExternalConfigProvider {
     private final AtomicLong lastCheckAt = new AtomicLong(0);
     private volatile long lastModifiedTime = 0;
 
-    public ExternalConfigProvider(@Value("{/opt/personal/apps/config.properties}") String configFilePath) {
+    public ExternalConfigProvider(
+            @Value("${app.config.path:/opt/personal/apps/config.properties}") String configFilePath) {
         this.configFilePath =
                 (configFilePath != null && !configFilePath.isBlank())
                 ? Paths.get(configFilePath)
