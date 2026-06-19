@@ -1,10 +1,12 @@
 package com.example.service.internal.users;
 
 import com.example.common.base.common.Page;
+import com.example.common.converter.RoleConverter;
 import com.example.common.converter.SystemUserConverter;
 import com.example.common.domain.SystemUserDomain;
 import com.example.common.filter.SystemUserFilter;
 import com.example.repository.api.AuditDao;
+import com.example.repository.api.RoleDao;
 import com.example.repository.api.SystemUserDao;
 import com.example.service.api.SystemUserService;
 import com.example.service.internal.usecase.systemuser.SystemUserAddUseCase;
@@ -23,12 +25,16 @@ public class SystemUserServiceImpl implements SystemUserService {
     private final SystemUserConverter converter;
     private final AuditDao auditDao;
     private final PasswordEncoder passwordEncoder;
+    private final RoleDao roleDao;
+    private final RoleConverter roleConverter;
 
-    public SystemUserServiceImpl(SystemUserDao repo, SystemUserConverter converter, AuditDao auditDao, PasswordEncoder passwordEncoder) {
+    public SystemUserServiceImpl(SystemUserDao repo, SystemUserConverter converter, AuditDao auditDao, PasswordEncoder passwordEncoder, RoleDao roleDao, RoleConverter roleConverter) {
         this.repo = repo;
         this.converter = converter;
         this.auditDao = auditDao;
         this.passwordEncoder = passwordEncoder;
+        this.roleDao = roleDao;
+        this.roleConverter = roleConverter;
     }
 
 
@@ -63,7 +69,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public Optional<SystemUserDomain> findById(String id) {
-        return repo.findById(id).map(converter::toDomain);
+        Optional<SystemUserDomain> result = repo.findById(id).map(converter::toDomain);
+        result.ifPresent(this::enrichWithRole);
+        return result;
     }
 
     @Override
@@ -79,5 +87,11 @@ public class SystemUserServiceImpl implements SystemUserService {
     @Override
     public Page<SystemUserDomain> findAll(SystemUserFilter filter) {
         return repo.findAllWithPagination(filter).map(converter::toDomain);
+    }
+
+    private void enrichWithRole(SystemUserDomain domain) {
+        if (domain != null && domain.getRoleId() != null) {
+            roleDao.findById(domain.getRoleId()).map(roleConverter::toDomain).ifPresent(domain::setRoleDomain);
+        }
     }
 }

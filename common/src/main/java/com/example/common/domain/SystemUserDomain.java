@@ -4,8 +4,10 @@ import com.example.common.permissions.systemUser.SystemUserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SystemUserDomain extends AbstractDomain {
     private String fullName;
     private String email;

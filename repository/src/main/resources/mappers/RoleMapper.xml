@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    Expected table DDL:
+    CREATE TABLE system.roles (
+        id               VARCHAR(36)  PRIMARY KEY,
+        title            VARCHAR(255) NOT NULL UNIQUE,
+        permissions      JSONB,
+        active           BOOLEAN      NOT NULL DEFAULT TRUE,
+        created_by       VARCHAR(100),
+        created_on       TIMESTAMP,
+        last_modified_by VARCHAR(100),
+        last_modified_on TIMESTAMP,
+        deleted_by       VARCHAR(100),
+        deleted_on       TIMESTAMP,
+        deleted          BOOLEAN      NOT NULL DEFAULT FALSE,
+        version          BIGINT       DEFAULT 0
+    );
+-->
+
+<mapper namespace="com.example.repository.mapper.RoleMapper">
+
+    <resultMap id="roleResultMap"
+               type="com.example.common.entity.RoleEntity">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="permissions" column="permissions"/>
+        <result property="active" column="active"/>
+        <result property="createdBy"      column="created_by"/>
+        <result property="createdOn"      column="created_on"        javaType="java.time.LocalDateTime"/>
+        <result property="lastModifiedBy" column="last_modified_by"/>
+        <result property="lastModifiedOn" column="last_modified_on"  javaType="java.time.LocalDateTime"/>
+        <result property="deletedBy"      column="deleted_by"/>
+        <result property="deletedOn"      column="deleted_on"        javaType="java.time.LocalDateTime"/>
+        <result property="deleted" column="deleted"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id, title, permissions,
+        active,
+        created_by, created_on, last_modified_by, last_modified_on,
+        deleted_by, deleted_on, deleted, version
+    </sql>
+
+    <sql id="filterWhere">
+        <where>
+            <if test="filter.id != null">
+                AND id = #{filter.id}
+            </if>
+            <if test="filter.ids != null and !filter.ids.isEmpty()">
+                AND id IN
+                <foreach item="id" collection="filter.ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="filter.title != null and filter.title != ''">
+                AND LOWER(title) = LOWER(#{filter.title})
+            </if>
+            <if test="filter.active != null">
+                AND active = #{filter.active}
+            </if>
+            <if test="filter.searchParameter != null and filter.searchParameter != ''">
+                AND title ILIKE #{filter.searchParameter}
+            </if>
+        </where>
+    </sql>
+    <select id="findAll" resultMap="roleResultMap">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM system.roles
+        <include refid="filterWhere"/>
+        ORDER BY ${filter.sortColumn} ${filter.sortDirection}
+        LIMIT #{filter.pageSize} OFFSET #{filter.offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM system.roles
+        <include refid="filterWhere"/>
+    </select>
+
+    <select id="findById" resultMap="roleResultMap">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM system.roles
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByTitle" resultMap="roleResultMap">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM roles
+        WHERE LOWER(title) = LOWER(#{title})
+    </select>
+
+    <insert id="insert">
+        INSERT INTO system.roles (id, title, permissions,
+                                 active,
+                                 created_by, created_on,
+                                 deleted, version)
+        VALUES (#{id}, #{title}, #{permissions}::JSONB,
+                #{active},
+                #{createdBy}, #{createdOn},
+                #{deleted}, #{version})
+    </insert>
+
+    <update id="update">
+        UPDATE system.roles
+        SET title            = #{title},
+            permissions      = #{permissions}::JSONB,
+            active           = #{active},
+            last_modified_by = #{lastModifiedBy},
+            last_modified_on = #{lastModifiedOn},
+            deleted          = #{deleted},
+            deleted_by       = #{deletedBy},
+            deleted_on       = #{deletedOn},
+            version          = #{version}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE system.roles
+        SET deleted    = #{entity.deleted},
+            active     = #{entity.active},
+            deleted_on = #{entity.deletedOn},
+            deleted_by = #{entity.deletedBy}
+        WHERE id = #{entity.id}
+    </update>
+</mapper>
