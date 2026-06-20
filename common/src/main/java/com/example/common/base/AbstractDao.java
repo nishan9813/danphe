@@ -11,7 +11,7 @@ public interface AbstractDao<F extends Filter, E extends Entity> extends BaseDao
 
     int update(E entity);
 
-    int delete(F filter);
+    int delete(E entity);
 
     Page<E> findAllWithPagination(F filter);
 

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,7 +31,13 @@ public class SystemUserController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     SystemUserResponse create(@RequestBody SystemUserDomain domain) {
-        return SystemUserResponse.from(service.create(domain));
+        return SystemUserResponse.from(service.insert(domain));
+    }
+
+    @PreAuthorize("hasAuthority('SYSTEM_USER_UPDATE')")
+    @PutMapping
+    SystemUserResponse update(@RequestBody SystemUserDomain domain) {
+        return SystemUserResponse.from(service.update(domain));
     }
 
 
