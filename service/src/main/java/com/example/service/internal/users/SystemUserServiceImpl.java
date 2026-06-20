@@ -10,14 +10,17 @@ import com.example.repository.api.RoleDao;
 import com.example.repository.api.SystemUserDao;
 import com.example.service.api.SystemUserService;
 import com.example.service.internal.usecase.systemuser.SystemUserAddUseCase;
+import com.example.service.internal.usecase.systemuser.SystemUserUpdateUseCase;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
+@Transactional(readOnly = true)
 public class SystemUserServiceImpl implements SystemUserService {
 
 
@@ -37,32 +40,32 @@ public class SystemUserServiceImpl implements SystemUserService {
         this.roleConverter = roleConverter;
     }
 
-
-    @Override
-    public SystemUserDomain create(SystemUserDomain domain) {
-        domain.setPassword(passwordEncoder.encode(domain.getPassword()));
-        SystemUserAddUseCase systemUserAddUseCase =
-                new SystemUserAddUseCase(this.converter, this.auditDao, this.repo);
-        systemUserAddUseCase.execute(domain);
-        return domain;
-    }
-
     @Override
     public Optional<SystemUserDomain> findByEmail(String email) {
         return repo.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public SystemUserDomain insert(SystemUserDomain req) {
-        return null;
+        req.setPassword(passwordEncoder.encode(req.getPassword()));
+        SystemUserAddUseCase systemUserAddUseCase =
+                new SystemUserAddUseCase(this.converter, this.auditDao, this.repo);
+        systemUserAddUseCase.execute(req);
+        return req;
     }
 
     @Override
+    @Transactional
     public SystemUserDomain update(SystemUserDomain req) {
-        return null;
+        SystemUserUpdateUseCase updateUseCase =
+                new SystemUserUpdateUseCase(this.converter, this.auditDao, this.repo);
+        return updateUseCase.execute(req);
+
     }
 
     @Override
+    @Transactional
     public String delete(SystemUserDomain req) {
         return "";
     }

@@ -77,7 +77,7 @@ public abstract class AbstractDeleteUseCase<D extends Domain, O> implements UseC
   }
 
   protected void update(D domain) {
-    int updateCount = this.entityDao.delete((Filter) converter.toEntity(domain));
+    int updateCount = this.entityDao.delete(converter.toEntity(domain));
     if (updateCount == 0) {
       throw new AppException("Entity Cannot be updated");
     }

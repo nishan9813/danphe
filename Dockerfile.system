@@ -1,0 +1,31 @@
+FROM maven:3.9-eclipse-temurin-17 AS builder
+WORKDIR /app
+
+COPY pom.xml .
+
+COPY common/pom.xml common/
+COPY repository/pom.xml repository/
+COPY service/pom.xml service/
+COPY system/pom.xml system/
+COPY client/pom.xml client/
+
+RUN mvn dependency:go-offline -q
+
+COPY common/src common/src
+COPY repository/src repository/src
+COPY service/src service/src
+COPY system/src system/src
+
+RUN mvn clean package -pl system -am -DskipTests -q
+
+FROM eclipse-temurin:17-jre-noble
+WORKDIR /app
+
+COPY --from=builder /app/system/target/system-*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", \
+    "-XX:+UseContainerSupport", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-jar", "app.jar"]

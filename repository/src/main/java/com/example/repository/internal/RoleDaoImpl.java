@@ -21,17 +21,17 @@ public class RoleDaoImpl implements RoleDao{
 
     @Override
     public int insert(RoleEntity entity) {
-        return 0;
+        return mapper.insert(entity);
     }
 
     @Override
     public int update(RoleEntity entity) {
-        return 0;
+        return mapper.update(entity);
     }
 
     @Override
-    public int delete(RoleFilter filter) {
-        return 0;
+    public int delete(RoleEntity entity) {
+        return mapper.delete(entity);
     }
 
     @Override

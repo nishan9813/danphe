@@ -1,6 +1,5 @@
 package com.example.repository.internal;
 
-import com.example.common.base.Converter;
 import com.example.common.base.common.Page;
 import com.example.common.converter.SystemUserConverter;
 import com.example.common.domain.SystemUserDomain;
@@ -32,12 +31,12 @@ public class SystemUserDaoImpl implements SystemUserDao {
 
     @Override
     public int update(SystemUserEntity entity) {
-        return 0;
+        return mapper.update(entity);
     }
 
     @Override
-    public int delete(SystemUserFilter filter) {
-        return 0;
+    public int delete(SystemUserEntity entity) {
+        return mapper.delete(entity);
     }
 
     @Override
@@ -49,12 +48,12 @@ public class SystemUserDaoImpl implements SystemUserDao {
 
     @Override
     public List<SystemUserEntity> findAll(SystemUserFilter filter) {
-        return List.of();
+        return mapper.findAll(filter);
     }
 
     @Override
     public Optional<SystemUserEntity> findOne(SystemUserFilter filter) {
-        return Optional.empty();
+        return mapper.findAll(filter).stream().findFirst();
     }
 
     @Override

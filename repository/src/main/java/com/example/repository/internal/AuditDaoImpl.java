@@ -30,7 +30,7 @@ public class AuditDaoImpl implements AuditDao {
     }
 
     @Override
-    public int delete(AuditFilter filter) {
+    public int delete(AuditEntity entity) {
         return 0;
     }
 

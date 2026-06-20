@@ -6,7 +6,6 @@ import com.example.common.filter.SystemUserFilter;
 import java.util.Optional;
 
 public interface SystemUserService extends Service<SystemUserDomain, SystemUserFilter> {
-    SystemUserDomain create(SystemUserDomain domain);
 
     Optional<SystemUserDomain> findByEmail(String email);
 }

@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Maven build outputs (Docker builds its own)
+target
+*/target
+
+# IDE files
+.idea
+*.iml
+.vscode
+
+# Local config (we mount docker version separately)
+config.properties
+
+# Docs
+*.md
+HELP.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files themselves
+docker-compose.yml
+Dockerfile*

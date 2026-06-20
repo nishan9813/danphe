@@ -13,6 +13,8 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class ClientUserServiceImpl implements ClientUserService {
+
+
     @Override
     @Transactional
     public ClientUserDomain insert(ClientUserDomain req) {
@@ -20,11 +22,13 @@ public class ClientUserServiceImpl implements ClientUserService {
     }
 
     @Override
+    @Transactional
     public ClientUserDomain update(ClientUserDomain req) {
         return null;
     }
 
     @Override
+    @Transactional
     public String delete(ClientUserDomain req) {
         return "";
     }

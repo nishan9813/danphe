@@ -15,9 +15,6 @@ public enum SystemModules {
     SYSTEM_USER("System User"),
     ROLE("Role Management"),
     CLIENT_USER("Client User"),
-    ORGANIZATION("Organization"),
-    EVENT("Event"),
-    PAYMENT("Payment"),
     CHECKER_REQUEST("Checker Request") {
         @Override
         public List<PermissionInfo> getPermissions() {
@@ -26,10 +23,7 @@ public enum SystemModules {
                     makePerm("CHECKER_REQUEST_REVIEW", "Review Checker Request"));
         }
     },
-    MASTER_DATA("Master Data"),
-    EVENT_TICKET("Event Ticket"),
-    TICKET_ORDER("Ticket Order"),
-    TICKET_ORDER_ITEM("Ticket Order Item");
+    ;
 
     private final String title;
 

@@ -7,11 +7,13 @@ import com.example.common.filter.RoleFilter;
 import com.example.repository.api.RoleDao;
 import com.example.service.api.RoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDao dao;
@@ -24,16 +26,19 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
+    @Transactional
     public RoleDomain insert(RoleDomain req) {
         return null;
     }
 
     @Override
+    @Transactional
     public RoleDomain update(RoleDomain req) {
         return null;
     }
 
     @Override
+    @Transactional
     public String delete(RoleDomain req) {
         return "";
     }
